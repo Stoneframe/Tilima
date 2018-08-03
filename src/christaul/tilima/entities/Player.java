@@ -29,9 +29,6 @@ public class Player
 	{
 		input.update();
 
-		System.out.println("x=" + x + ", targetX=" + targetX);
-		System.out.println("y=" + y + ", targetY=" + targetY);
-
 		if (targetY != y || targetX != x)
 		{
 			switch (direction)
