@@ -1,0 +1,2 @@
+ - Move one character in a 3x3 room
+ 	- Draw 3x3 room
