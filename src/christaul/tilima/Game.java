@@ -64,6 +64,16 @@ public class Game
 		}
 	}
 
+	public int getWidth()
+	{
+		return width;
+	}
+
+	public int getHeight()
+	{
+		return height;
+	}
+
 	public GameCamera getGameCamera()
 	{
 		return gameCamera;

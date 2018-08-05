@@ -46,14 +46,23 @@ public class Level
 
 	public void draw(Graphics g)
 	{
-		for (int y = 0; y < height; y++)
+		double xOffset = game.getGameCamera().getXOffset();
+		double yOffset = game.getGameCamera().getYOffset();
+
+		int xStart = (int)Math.max(0, xOffset / Tile.WIDTH);
+		int yStart = (int)Math.max(0, yOffset / Tile.HEIGHT);
+
+		int xEnd = (int)Math.min(width, (xOffset + game.getWidth()) / Tile.WIDTH + 1);
+		int yEnd = (int)Math.min(height, (yOffset + game.getHeight()) / Tile.HEIGHT + 1);
+
+		for (int y = yStart; y < yEnd; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = xStart; x < xEnd; x++)
 			{
 				getTile(x, y).draw(
 					g,
-					(int)(x * Tile.WIDTH - game.getGameCamera().getXOffset()),
-					(int)(y * Tile.HEIGHT - game.getGameCamera().getYOffset()));
+					(int)(x * Tile.WIDTH - xOffset),
+					(int)(y * Tile.HEIGHT - yOffset));
 			}
 		}
 	}
