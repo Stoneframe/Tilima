@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
+import christaul.tilima.gfx.GameCamera;
 import christaul.tilima.inputs.PlayerInput;
 import christaul.tilima.states.GameState;
 import christaul.tilima.states.State;
@@ -13,26 +14,26 @@ public class Game
 	private int width;
 	private int height;
 
+	private PlayerInput input;
+
 	private boolean running;
 
 	private State[] states;
 	private State currentState;
 
 	private GameLoop gameLoop;
+	private Thread gameThread;
+
+	private GameCamera gameCamera;
 
 	public Game(int width, int height, PlayerInput input)
 	{
 		this.width = width;
 		this.height = height;
 
+		this.input = input;
+
 		running = false;
-
-		states = new State[]
-		{
-				new GameState(input)
-		};
-
-		currentState = states[0];
 	}
 
 	public synchronized void start(Canvas canvas)
@@ -42,7 +43,9 @@ public class Game
 		running = true;
 
 		gameLoop = new GameLoop(canvas);
-		gameLoop.start();
+
+		gameThread = new Thread(gameLoop);
+		gameThread.start();
 	}
 
 	public synchronized void stop()
@@ -53,7 +56,7 @@ public class Game
 
 		try
 		{
-			gameLoop.join();
+			gameThread.join();
 		}
 		catch (InterruptedException e)
 		{
@@ -61,8 +64,14 @@ public class Game
 		}
 	}
 
+	public GameCamera getGameCamera()
+	{
+		return gameCamera;
+	}
+
 	private class GameLoop
-		extends Thread
+		implements
+			Runnable
 	{
 		private Canvas canvas;
 
@@ -71,6 +80,15 @@ public class Game
 		public GameLoop(Canvas canvas)
 		{
 			this.canvas = canvas;
+
+			gameCamera = new GameCamera(width, height, 0, 0);
+
+			states = new State[]
+			{
+					new GameState(Game.this, input)
+			};
+
+			currentState = states[0];
 		}
 
 		@Override

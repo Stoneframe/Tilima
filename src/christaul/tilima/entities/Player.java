@@ -2,9 +2,11 @@ package christaul.tilima.entities;
 
 import java.awt.Graphics;
 
+import christaul.tilima.Game;
 import christaul.tilima.gfx.Assets;
 import christaul.tilima.inputs.PlayerInput;
 import christaul.tilima.tiles.Tile;
+import christaul.tilima.util.Vector2D;
 
 public class Player
 	extends Creature
@@ -12,14 +14,10 @@ public class Player
 	private PlayerInput input;
 
 	private int direction;
-	private float targetX, targetY;
 
-	public Player(float x, float y, PlayerInput input)
+	public Player(Game game, int width, int height, Vector2D position, PlayerInput input)
 	{
-		super(x, y);
-
-		targetX = x;
-		targetY = y;
+		super(game, width, height, position);
 
 		this.input = input;
 	}
@@ -27,43 +25,45 @@ public class Player
 	@Override
 	public void update()
 	{
-		input.update();
+		float speed = 1.0f;
 
-		if (targetY != y || targetX != x)
+		if (position.sub(targetPosition).length() > 0.1)
 		{
 			switch (direction)
 			{
 				case PlayerInput.UP:
-					y -= 0.2;
+					move(UP, speed);
 					break;
 				case PlayerInput.DOWN:
-					y += 0.2;
+					move(DOWN, speed);
 					break;
 				case PlayerInput.LEFT:
-					x -= 0.2;
+					move(LEFT, speed);
 					break;
 				case PlayerInput.RIGHT:
-					x += 0.2;
+					move(RIGHT, speed);
 					break;
 			}
 		}
 		else
 		{
+			input.update();
+
 			direction = input.getMovement();
 
 			switch (input.getMovement())
 			{
 				case PlayerInput.UP:
-					targetY = y - Tile.HEIGHT;
+					targetPosition = position.add(UP.mul(Tile.HEIGHT));
 					break;
 				case PlayerInput.DOWN:
-					targetY = y + Tile.HEIGHT;
+					targetPosition = position.add(DOWN.mul(Tile.HEIGHT));
 					break;
 				case PlayerInput.LEFT:
-					targetX = x - Tile.WIDTH;
+					targetPosition = position.add(LEFT.mul(Tile.WIDTH));
 					break;
 				case PlayerInput.RIGHT:
-					targetX = x + Tile.WIDTH;
+					targetPosition = position.add(RIGHT.mul(Tile.WIDTH));
 					break;
 			}
 		}
@@ -74,8 +74,8 @@ public class Player
 	{
 		g.drawImage(
 			Assets.player,
-			(int)x,
-			(int)y,
+			(int)(position.getX() - game.getGameCamera().getXOffset()),
+			(int)(position.getY() - game.getGameCamera().getYOffset()),
 			Tile.WIDTH,
 			Tile.HEIGHT,
 			null);

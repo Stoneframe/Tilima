@@ -2,17 +2,22 @@ package christaul.tilima.levels;
 
 import java.awt.Graphics;
 
+import christaul.tilima.Game;
 import christaul.tilima.tiles.Tile;
 
 public class Level
 {
+	private Game game;
+
 	private int width;
 	private int height;
 
 	private int[][] tiles;
 
-	public Level()
+	public Level(Game game)
 	{
+		this.game = game;
+
 		width = 5;
 		height = 5;
 
@@ -45,7 +50,10 @@ public class Level
 		{
 			for (int x = 0; x < width; x++)
 			{
-				getTile(x, y).draw(g, x * Tile.WIDTH, y * Tile.HEIGHT);
+				getTile(x, y).draw(
+					g,
+					(int)(x * Tile.WIDTH - game.getGameCamera().getXOffset()),
+					(int)(y * Tile.HEIGHT - game.getGameCamera().getYOffset()));
 			}
 		}
 	}
