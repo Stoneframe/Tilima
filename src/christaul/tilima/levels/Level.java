@@ -21,19 +21,38 @@ public class Level
 		width = 5;
 		height = 5;
 
-		tiles = new int[width][height];
-
-		for (int x = 0; x < width; x++)
+		tiles = new int[][]
 		{
-			for (int y = 0; y < height; y++)
-			{
-				tiles[x][y] = 0;
-			}
-		}
+				{
+						1, 1, 1, 1, 1
+				},
+				{
+						1, 0, 0, 0, 1
+				},
+				{
+						1, 0, 0, 0, 1
+				},
+				{
+						1, 0, 0, 0, 1
+				},
+				{
+						1, 1, 1, 1, 1
+				}
+		};
+	}
+
+	public Tile getTileAtPixel(int x, int y)
+	{
+		return getTile(x / Tile.WIDTH, y / Tile.HEIGHT);
 	}
 
 	public Tile getTile(int x, int y)
 	{
+		if (x < 0 || y < 0 || x >= width || y >= height)
+		{
+			return Tile.grassTile;
+		}
+
 		Tile tile = Tile.tiles[tiles[x][y]];
 
 		return tile != null ? tile : Tile.grassTile;

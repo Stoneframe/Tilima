@@ -31,7 +31,7 @@ public class Vector2D
 		return new Vector2D(x - vector.x, y - vector.y);
 	}
 
-	public Vector2D mul(float factor)
+	public Vector2D mul(double factor)
 	{
 		return new Vector2D(factor * x, factor * y);
 	}
@@ -39,5 +39,12 @@ public class Vector2D
 	public double length()
 	{
 		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+	}
+
+	public static Vector2D unit(Vector2D point1, Vector2D point2)
+	{
+		Vector2D diff = point2.sub(point1);
+
+		return new Vector2D(diff.getX() / diff.length(), diff.getY() / diff.length());
 	}
 }

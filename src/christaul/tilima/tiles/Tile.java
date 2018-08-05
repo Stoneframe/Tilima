@@ -10,6 +10,7 @@ public class Tile
 
 	public static Tile[] tiles = new Tile[256];
 	public static Tile grassTile = new GrassTile(0);
+	public static Tile stoneTile = new StoneTile(1);
 
 	protected BufferedImage texture;
 
@@ -35,7 +36,6 @@ public class Tile
 
 	public void update()
 	{
-
 	}
 
 	public void draw(Graphics g, int x, int y)
