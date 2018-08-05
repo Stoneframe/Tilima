@@ -2,21 +2,21 @@ package christaul.tilima.levels;
 
 import java.awt.Graphics;
 
-import christaul.tilima.Game;
+import christaul.tilima.Handler;
 import christaul.tilima.tiles.Tile;
 
 public class Level
 {
-	private Game game;
+	private Handler handler;
 
 	private int width;
 	private int height;
 
 	private int[][] tiles;
 
-	public Level(Game game)
+	public Level(Handler handler)
 	{
-		this.game = game;
+		this.handler = handler;
 
 		width = 5;
 		height = 5;
@@ -46,14 +46,14 @@ public class Level
 
 	public void draw(Graphics g)
 	{
-		double xOffset = game.getGameCamera().getXOffset();
-		double yOffset = game.getGameCamera().getYOffset();
+		double xOffset = handler.getGameCamera().getXOffset();
+		double yOffset = handler.getGameCamera().getYOffset();
 
 		int xStart = (int)Math.max(0, xOffset / Tile.WIDTH);
 		int yStart = (int)Math.max(0, yOffset / Tile.HEIGHT);
 
-		int xEnd = (int)Math.min(width, (xOffset + game.getWidth()) / Tile.WIDTH + 1);
-		int yEnd = (int)Math.min(height, (yOffset + game.getHeight()) / Tile.HEIGHT + 1);
+		int xEnd = (int)Math.min(width, (xOffset + handler.getWidth()) / Tile.WIDTH + 1);
+		int yEnd = (int)Math.min(height, (yOffset + handler.getHeight()) / Tile.HEIGHT + 1);
 
 		for (int y = yStart; y < yEnd; y++)
 		{

@@ -2,7 +2,7 @@ package christaul.tilima.entities;
 
 import java.awt.Graphics;
 
-import christaul.tilima.Game;
+import christaul.tilima.Handler;
 import christaul.tilima.gfx.Assets;
 import christaul.tilima.inputs.PlayerInput;
 import christaul.tilima.tiles.Tile;
@@ -15,9 +15,9 @@ public class Player
 
 	private int direction;
 
-	public Player(Game game, int width, int height, Vector2D position, PlayerInput input)
+	public Player(Handler handler, int width, int height, Vector2D position, PlayerInput input)
 	{
-		super(game, width, height, position);
+		super(handler, width, height, position);
 
 		this.input = input;
 	}
@@ -74,8 +74,8 @@ public class Player
 	{
 		g.drawImage(
 			Assets.player,
-			(int)(position.getX() - game.getGameCamera().getXOffset()),
-			(int)(position.getY() - game.getGameCamera().getYOffset()),
+			(int)(position.getX() - handler.getGameCamera().getXOffset()),
+			(int)(position.getY() - handler.getGameCamera().getYOffset()),
 			Tile.WIDTH,
 			Tile.HEIGHT,
 			null);

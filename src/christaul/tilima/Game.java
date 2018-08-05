@@ -26,6 +26,8 @@ public class Game
 
 	private GameCamera gameCamera;
 
+	private Handler handler;
+
 	public Game(int width, int height, PlayerInput input)
 	{
 		this.width = width;
@@ -93,9 +95,11 @@ public class Game
 
 			gameCamera = new GameCamera(width, height, 0, 0);
 
+			handler = new Handler(Game.this);
+
 			states = new State[]
 			{
-					new GameState(Game.this, input)
+					new GameState(handler, input)
 			};
 
 			currentState = states[0];

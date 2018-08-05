@@ -2,22 +2,22 @@ package christaul.tilima.entities;
 
 import java.awt.Graphics;
 
-import christaul.tilima.Game;
+import christaul.tilima.Handler;
 import christaul.tilima.util.Vector2D;
 
 public abstract class Entity
 {
-	protected Game game;
-	
+	protected Handler handler;
+
 	protected int width;
 	protected int height;
 
 	protected Vector2D position;
 
-	public Entity(Game game, int width, int height, Vector2D position)
+	public Entity(Handler handler, int width, int height, Vector2D position)
 	{
-		this.game = game;
-		
+		this.handler = handler;
+
 		this.width = width;
 		this.height = height;
 

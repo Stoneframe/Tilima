@@ -7,7 +7,7 @@ public class Tile
 {
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
-	
+
 	public static Tile[] tiles = new Tile[256];
 	public static Tile grassTile = new GrassTile(0);
 

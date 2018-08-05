@@ -1,6 +1,6 @@
 package christaul.tilima.entities;
 
-import christaul.tilima.Game;
+import christaul.tilima.Handler;
 import christaul.tilima.util.Vector2D;
 
 public abstract class Creature
@@ -13,9 +13,9 @@ public abstract class Creature
 
 	protected Vector2D targetPosition;
 
-	public Creature(Game game, int width, int height, Vector2D position)
+	public Creature(Handler handler, int width, int height, Vector2D position)
 	{
-		super(game, width, height, position);
+		super(handler, width, height, position);
 
 		targetPosition = position;
 	}
