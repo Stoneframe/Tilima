@@ -65,7 +65,7 @@ public abstract class Creature
 		{
 			if (entity.equals(this)) continue;
 
-			if (position.equals(entity.getPosition()))
+			if (position.sub(entity.getPosition()).length() < 0.1)
 			{
 				return true;
 			}

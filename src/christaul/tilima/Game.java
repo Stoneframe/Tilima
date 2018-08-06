@@ -14,7 +14,7 @@ public class Game
 	private int width;
 	private int height;
 
-	private PlayerInput input;
+	private PlayerInput[] inputs;
 
 	private boolean running;
 
@@ -28,12 +28,12 @@ public class Game
 
 	private Handler handler;
 
-	public Game(int width, int height, PlayerInput input)
+	public Game(int width, int height, PlayerInput... inputs)
 	{
 		this.width = width;
 		this.height = height;
 
-		this.input = input;
+		this.inputs = inputs;
 
 		running = false;
 	}
@@ -99,7 +99,7 @@ public class Game
 
 			states = new State[]
 			{
-					new GameState(handler, input)
+					new GameState(handler, inputs)
 			};
 
 			currentState = states[0];
