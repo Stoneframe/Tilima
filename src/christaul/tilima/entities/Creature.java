@@ -65,7 +65,7 @@ public abstract class Creature
 		{
 			if (entity.equals(this)) continue;
 
-			if (position.sub(entity.getPosition()).length() < 0.1)
+			if (entity.getBounds().overlaps(position))
 			{
 				return true;
 			}
@@ -76,7 +76,7 @@ public abstract class Creature
 
 	protected boolean isMoving()
 	{
-		return currentPosition.sub(targetPosition).length() > 0.1;
+		return !currentPosition.equals(targetPosition);
 	}
 
 	protected void move(Vector2D direction, double speed)

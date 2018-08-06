@@ -3,6 +3,7 @@ package christaul.tilima.entities;
 import java.awt.Graphics;
 
 import christaul.tilima.Handler;
+import christaul.tilima.util.Rectangle2D;
 import christaul.tilima.util.Vector2D;
 
 public abstract class Entity
@@ -37,6 +38,15 @@ public abstract class Entity
 	public int getHeight()
 	{
 		return height;
+	}
+
+	public Rectangle2D getBounds()
+	{
+		return new Rectangle2D(
+				(int)currentPosition.getX(),
+				(int)currentPosition.getY(),
+				width,
+				height);
 	}
 
 	public abstract void update();
