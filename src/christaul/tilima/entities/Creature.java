@@ -6,20 +6,24 @@ import christaul.tilima.util.Vector2D;
 public abstract class Creature
 	extends Entity
 {
-	private static final double SPEED = 2.0;
+	public static Vector2D UP = new Vector2D(0, -1);
+	public static Vector2D DOWN = new Vector2D(0, 1);
+	public static Vector2D LEFT = new Vector2D(-1, 0);
+	public static Vector2D RIGHT = new Vector2D(1, 0);
 
-	protected static Vector2D UP = new Vector2D(0, -1);
-	protected static Vector2D DOWN = new Vector2D(0, 1);
-	protected static Vector2D LEFT = new Vector2D(-1, 0);
-	protected static Vector2D RIGHT = new Vector2D(1, 0);
+	private static final double SPEED = 1.0;
 
 	protected Vector2D targetPosition;
 
-	public Creature(Handler handler, int width, int height, Vector2D position)
+	protected Vector2D direction;
+
+	public Creature(Handler handler, int width, int height, Vector2D position, Vector2D direction)
 	{
 		super(handler, width, height, position);
 
 		targetPosition = position;
+
+		this.direction = direction;
 	}
 
 	@Override
@@ -30,24 +34,16 @@ public abstract class Creature
 			targetPosition = currentPosition;
 		}
 
-		if (currentPosition.sub(targetPosition).length() > 0.1)
+		if (isMoving())
 		{
-			move(getDirection(), SPEED);
+			move(direction, SPEED);
 		}
 		else
 		{
-			getInput();
+			updateInput();
 		}
-	}
 
-	protected Vector2D getDirection()
-	{
-		return Vector2D.unit(currentPosition, targetPosition);
-	}
-
-	protected void move(Vector2D direction, double speed)
-	{
-		currentPosition = currentPosition.add(direction.mul(speed));
+		updateAnimation();
 	}
 
 	protected boolean collisionWithTileAt(Vector2D position)
@@ -58,5 +54,22 @@ public abstract class Creature
 			.isSolid();
 	}
 
-	protected abstract void getInput();
+	protected boolean isMoving()
+	{
+		return currentPosition.sub(targetPosition).length() > 0.1;
+	}
+
+	protected void move(Vector2D direction, double speed)
+	{
+		currentPosition = currentPosition.add(direction.mul(speed));
+	}
+
+	protected Vector2D getDirection()
+	{
+		return Vector2D.unit(currentPosition, targetPosition);
+	}
+
+	protected abstract void updateAnimation();
+
+	protected abstract void updateInput();
 }

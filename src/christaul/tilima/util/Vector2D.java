@@ -41,6 +41,16 @@ public class Vector2D
 		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 	}
 
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (!(obj instanceof Vector2D)) return false;
+
+		Vector2D other = (Vector2D)obj;
+
+		return this.x == other.x && this.y == other.y;
+	}
+
 	public static Vector2D unit(Vector2D point1, Vector2D point2)
 	{
 		Vector2D diff = point2.sub(point1);

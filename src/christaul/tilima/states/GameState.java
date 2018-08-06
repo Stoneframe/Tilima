@@ -3,6 +3,7 @@ package christaul.tilima.states;
 import java.awt.Graphics;
 
 import christaul.tilima.Handler;
+import christaul.tilima.entities.Creature;
 import christaul.tilima.entities.Player;
 import christaul.tilima.inputs.PlayerInput;
 import christaul.tilima.levels.Level;
@@ -22,7 +23,7 @@ public class GameState
 		level = new Level(handler);
 		handler.setLevel(level);
 
-		player = new Player(handler, 32, 32, new Vector2D(64, 64), input);
+		player = new Player(handler, 32, 32, new Vector2D(64, 64), Creature.DOWN, input);
 	}
 
 	@Override

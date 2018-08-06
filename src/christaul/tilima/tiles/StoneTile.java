@@ -9,7 +9,7 @@ public class StoneTile
 	{
 		super(Assets.stone, id);
 	}
-	
+
 	@Override
 	public boolean isSolid()
 	{
