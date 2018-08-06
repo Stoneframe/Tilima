@@ -5,7 +5,8 @@ import java.awt.Graphics;
 import christaul.tilima.Handler;
 import christaul.tilima.util.Vector2D;
 
-public class Tree extends StaticEntity
+public class Tree
+	extends StaticEntity
 {
 	public Tree(Handler handler, int width, int height, Vector2D position)
 	{

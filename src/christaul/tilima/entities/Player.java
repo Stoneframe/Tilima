@@ -1,8 +1,5 @@
 package christaul.tilima.entities;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-
 import christaul.tilima.Handler;
 import christaul.tilima.gfx.Animation;
 import christaul.tilima.gfx.Assets;
@@ -15,10 +12,15 @@ public class Player
 {
 	private PlayerInput input;
 
-	private Animation animationUp;
-	private Animation animationDown;
-	private Animation animationLeft;
-	private Animation animationRight;
+	private Animation animationIdleUp;
+	private Animation animationIdleDown;
+	private Animation animationIdleLeft;
+	private Animation animationIdleRight;
+
+	private Animation animationMovingUp;
+	private Animation animationMovingDown;
+	private Animation animationMovingLeft;
+	private Animation animationMovingRight;
 
 	public Player(
 			Handler handler,
@@ -32,97 +34,72 @@ public class Player
 
 		this.input = input;
 
-		animationUp = new Animation(Assets.player_moving_up, 62);
-		animationDown = new Animation(Assets.player_moving_down, 62);
-		animationLeft = new Animation(Assets.player_moving_left, 62);
-		animationRight = new Animation(Assets.player_moving_right, 62);
+		animationIdleUp = new Animation(Assets.player_idle_up, Integer.MAX_VALUE);
+		animationIdleDown = new Animation(Assets.player_idle_down, Integer.MAX_VALUE);
+		animationIdleLeft = new Animation(Assets.player_idle_left, Integer.MAX_VALUE);
+		animationIdleRight = new Animation(Assets.player_idle_right, Integer.MAX_VALUE);
+
+		animationMovingUp = new Animation(Assets.player_moving_up, 62);
+		animationMovingDown = new Animation(Assets.player_moving_down, 62);
+		animationMovingLeft = new Animation(Assets.player_moving_left, 62);
+		animationMovingRight = new Animation(Assets.player_moving_right, 62);
+
+		phase = new PlayerMovementPhase();
 	}
 
-	@Override
-	public void draw(Graphics g)
+	private class PlayerMovementPhase
+		extends MovementPhase
 	{
-		g.drawImage(
-			getCurrentAnimationFrame(),
-			(int)(currentPosition.getX() - handler.getGameCamera().getXOffset()),
-			(int)(currentPosition.getY() - handler.getGameCamera().getYOffset()),
-			Tile.WIDTH,
-			Tile.HEIGHT,
-			null);
-	}
+		@Override
+		protected void updateInput()
+		{
+			input.update();
 
-	private BufferedImage getCurrentAnimationFrame()
-	{
-		if (direction.equals(UP))
-		{
-			return isMoving() ? animationUp.getCurrentFrame() : Assets.player_up;
-		}
-		else if (direction.equals(DOWN))
-		{
-			return isMoving() ? animationDown.getCurrentFrame() : Assets.player_down;
-		}
-		else if (direction.equals(LEFT))
-		{
-			return isMoving() ? animationLeft.getCurrentFrame() : Assets.player_left;
-		}
-		else if (direction.equals(RIGHT))
-		{
-			return isMoving() ? animationRight.getCurrentFrame() : Assets.player_right;
-		}
-		else
-		{
-			System.exit(1);
-			return null;
-		}
-	}
+			switch (input.getMovement())
+			{
+				case PlayerInput.UP:
+					targetPosition = currentPosition.add(UP.mul(Tile.HEIGHT));
+					break;
+				case PlayerInput.DOWN:
+					targetPosition = currentPosition.add(DOWN.mul(Tile.HEIGHT));
+					break;
+				case PlayerInput.LEFT:
+					targetPosition = currentPosition.add(LEFT.mul(Tile.WIDTH));
+					break;
+				case PlayerInput.RIGHT:
+					targetPosition = currentPosition.add(RIGHT.mul(Tile.WIDTH));
+					break;
+			}
 
-	@Override
-	protected void updateAnimation()
-	{
-		if (isMoving())
+			if (isMoving())
+			{
+				direction = Vector2D.unit(currentPosition, targetPosition);
+			}
+		}
+
+		@Override
+		protected Animation getCurrentAnimation()
 		{
 			if (direction.equals(UP))
 			{
-				animationUp.update();
+				return isMoving() ? animationMovingUp : animationIdleUp;
 			}
 			else if (direction.equals(DOWN))
 			{
-				animationDown.update();
+				return isMoving() ? animationMovingDown : animationIdleDown;
 			}
 			else if (direction.equals(LEFT))
 			{
-				animationLeft.update();
+				return isMoving() ? animationMovingLeft : animationIdleLeft;
 			}
 			else if (direction.equals(RIGHT))
 			{
-				animationRight.update();
+				return isMoving() ? animationMovingRight : animationIdleRight;
 			}
-		}
-	}
-
-	@Override
-	protected void updateInput()
-	{
-		input.update();
-
-		switch (input.getMovement())
-		{
-			case PlayerInput.UP:
-				targetPosition = currentPosition.add(UP.mul(Tile.HEIGHT));
-				break;
-			case PlayerInput.DOWN:
-				targetPosition = currentPosition.add(DOWN.mul(Tile.HEIGHT));
-				break;
-			case PlayerInput.LEFT:
-				targetPosition = currentPosition.add(LEFT.mul(Tile.WIDTH));
-				break;
-			case PlayerInput.RIGHT:
-				targetPosition = currentPosition.add(RIGHT.mul(Tile.WIDTH));
-				break;
-		}
-
-		if (isMoving())
-		{
-			direction = getDirection();
+			else
+			{
+				return animationIdleDown;
+			}
 		}
 	}
 }

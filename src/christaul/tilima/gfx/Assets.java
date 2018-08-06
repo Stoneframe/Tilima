@@ -10,10 +10,10 @@ public class Assets
 	public static BufferedImage grass;
 	public static BufferedImage stone;
 
-	public static BufferedImage player_up;
-	public static BufferedImage player_down;
-	public static BufferedImage player_left;
-	public static BufferedImage player_right;
+	public static BufferedImage[] player_idle_up;
+	public static BufferedImage[] player_idle_down;
+	public static BufferedImage[] player_idle_left;
+	public static BufferedImage[] player_idle_right;
 
 	public static BufferedImage[] player_moving_up;
 	public static BufferedImage[] player_moving_left;
@@ -29,24 +29,25 @@ public class Assets
 
 		SpriteSheet playerSheet = new SpriteSheet(ImageLoader.loadImage("/textures/player.png"));
 
-		player_up = cropPlayerImage(0, 0, playerSheet);
-		player_left = cropPlayerImage(0, 1, playerSheet);
-		player_down = cropPlayerImage(0, 2, playerSheet);
-		player_right = cropPlayerImage(0, 3, playerSheet);
+		player_idle_up = cropPlayerImages(0, 0, 1, playerSheet);
+		player_idle_left = cropPlayerImages(1, 0, 1, playerSheet);
+		player_idle_down = cropPlayerImages(2, 0, 1, playerSheet);
+		player_idle_right = cropPlayerImages(3, 0, 1, playerSheet);
 
-		player_moving_up = cropPlayerImages(0, 8, playerSheet);
-		player_moving_left = cropPlayerImages(1, 8, playerSheet);
-		player_moving_down = cropPlayerImages(2, 8, playerSheet);
-		player_moving_right = cropPlayerImages(3, 8, playerSheet);
+		player_moving_up = cropPlayerImages(0, 1, 8, playerSheet);
+		player_moving_left = cropPlayerImages(1, 1, 8, playerSheet);
+		player_moving_down = cropPlayerImages(2, 1, 8, playerSheet);
+		player_moving_right = cropPlayerImages(3, 1, 8, playerSheet);
 	}
 
-	protected static BufferedImage[] cropPlayerImages(int row, int n, SpriteSheet sheet)
+	protected static
+		BufferedImage[] cropPlayerImages(int row, int start, int length, SpriteSheet sheet)
 	{
-		BufferedImage[] images = new BufferedImage[n];
+		BufferedImage[] images = new BufferedImage[length];
 
-		for (int col = 0; col < n; col++)
+		for (int col = start; col < start + length; col++)
 		{
-			images[col] = cropPlayerImage(col + 1, row, sheet);
+			images[col - start] = cropPlayerImage(col, row, sheet);
 		}
 
 		return images;

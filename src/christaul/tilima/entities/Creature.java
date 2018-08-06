@@ -1,6 +1,10 @@
 package christaul.tilima.entities;
 
+import java.awt.Graphics;
+
 import christaul.tilima.Handler;
+import christaul.tilima.gfx.Animation;
+import christaul.tilima.tiles.Tile;
 import christaul.tilima.util.Vector2D;
 
 public abstract class Creature
@@ -13,15 +17,13 @@ public abstract class Creature
 
 	private static final double SPEED = 1.0;
 
-	protected Vector2D targetPosition;
-
 	protected Vector2D direction;
+
+	protected Phase phase;
 
 	public Creature(Handler handler, int width, int height, Vector2D position, Vector2D direction)
 	{
 		super(handler, width, height, position);
-
-		targetPosition = position;
 
 		this.direction = direction;
 	}
@@ -29,64 +31,117 @@ public abstract class Creature
 	@Override
 	public void update()
 	{
-		if (collisionAt(targetPosition))
+		phase.update();
+	}
+
+	@Override
+	public void draw(Graphics g)
+	{
+		phase.draw(g);
+	}
+
+	private abstract class Phase
+	{
+		public abstract void update();
+
+		public void draw(Graphics g)
+		{
+			g.drawImage(
+				getCurrentAnimation().getCurrentFrame(),
+				(int)(currentPosition.getX() - handler.getGameCamera().getXOffset()),
+				(int)(currentPosition.getY() - handler.getGameCamera().getYOffset()),
+				Tile.WIDTH,
+				Tile.HEIGHT,
+				null);
+		}
+
+		protected abstract Animation getCurrentAnimation();
+	}
+
+	protected abstract class MovementPhase
+		extends Phase
+	{
+		protected Vector2D targetPosition;
+
+		private int tileX;
+		private int tileY;
+
+		private int tilesMoved;
+
+		public MovementPhase()
 		{
 			targetPosition = currentPosition;
+
+			tileX = (int)(currentPosition.getX() / Tile.WIDTH);
+			tileY = (int)(currentPosition.getY() / Tile.HEIGHT);
+
+			tilesMoved = 0;
 		}
 
-		if (isMoving())
+		public void update()
 		{
-			move(direction, SPEED);
-		}
-		else
-		{
-			updateInput();
-		}
+			if (tilesMoved > 10) return;
 
-		updateAnimation();
-	}
-
-	protected boolean collisionAt(Vector2D position)
-	{
-		return collisionWithTileAt(position) || collisionWithEntityAt(position);
-	}
-
-	protected boolean collisionWithTileAt(Vector2D position)
-	{
-		return handler.getLevel().getTileAt(position).isSolid();
-	}
-
-	protected boolean collisionWithEntityAt(Vector2D position)
-	{
-		for (Entity entity : handler.getLevel().getEntityManager().getEntities())
-		{
-			if (entity.equals(this)) continue;
-
-			if (entity.getBounds().overlaps(position))
+			if (collisionAt(targetPosition))
 			{
-				return true;
+				targetPosition = currentPosition;
 			}
+
+			if (isMoving())
+			{
+				move(direction, SPEED);
+
+				int nextTileX = (int)(currentPosition.getX() / Tile.WIDTH);
+				int nextTileY = (int)(currentPosition.getY() / Tile.HEIGHT);
+
+				if (nextTileX != tileX || nextTileY != tileY) tilesMoved++;
+
+				tileX = nextTileX;
+				tileY = nextTileY;
+			}
+			else
+			{
+				updateInput();
+			}
+
+			getCurrentAnimation().update();
 		}
 
-		return false;
+		protected boolean collisionAt(Vector2D position)
+		{
+			return collisionWithTileAt(position) || collisionWithEntityAt(position);
+		}
+
+		protected boolean collisionWithTileAt(Vector2D position)
+		{
+			return handler.getLevel().getTileAt(position).isSolid();
+		}
+
+		protected boolean collisionWithEntityAt(Vector2D position)
+		{
+			for (Entity entity : handler.getLevel().getEntityManager().getEntities())
+			{
+				if (entity.equals(Creature.this)) continue;
+
+				if (entity.getBounds().overlaps(position))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		protected boolean isMoving()
+		{
+			return !currentPosition.equals(targetPosition);
+		}
+
+		protected void move(Vector2D direction, double speed)
+		{
+			currentPosition = currentPosition.add(direction.mul(speed));
+		}
+
+		protected abstract void updateInput();
 	}
-
-	protected boolean isMoving()
-	{
-		return !currentPosition.equals(targetPosition);
-	}
-
-	protected void move(Vector2D direction, double speed)
-	{
-		currentPosition = currentPosition.add(direction.mul(speed));
-	}
-
-	protected Vector2D getDirection()
-	{
-		return Vector2D.unit(currentPosition, targetPosition);
-	}
-
-	protected abstract void updateAnimation();
-
-	protected abstract void updateInput();
 }
