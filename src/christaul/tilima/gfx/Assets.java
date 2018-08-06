@@ -17,7 +17,7 @@ public class Assets
 		SpriteSheet tileSheet = new SpriteSheet(ImageLoader.loadImage("/textures/tiles.png"));
 
 		grass = tileSheet.crop(1 * WIDTH + 1, 1 * HEIGHT + 1, WIDTH, HEIGHT);
-		stone = tileSheet.crop(3 * WIDTH + 3, 0 * HEIGHT + 0, WIDTH, HEIGHT);
+		stone = tileSheet.crop(4 * WIDTH + 4, 0 * HEIGHT + 0, WIDTH, HEIGHT);
 
 		SpriteSheet playerSheet = new SpriteSheet(ImageLoader.loadImage("/textures/player.png"));
 
