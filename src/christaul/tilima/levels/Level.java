@@ -3,6 +3,8 @@ package christaul.tilima.levels;
 import java.awt.Graphics;
 
 import christaul.tilima.Handler;
+import christaul.tilima.entities.EntityManager;
+import christaul.tilima.entities.Player;
 import christaul.tilima.tiles.Tile;
 
 public class Level
@@ -14,7 +16,9 @@ public class Level
 
 	private int[][] tiles;
 
-	public Level(Handler handler)
+	private EntityManager entityManager;
+
+	public Level(Handler handler, Player player)
 	{
 		this.handler = handler;
 
@@ -48,6 +52,8 @@ public class Level
 						1, 1, 1, 1, 1, 1, 1, 1
 				}
 		};
+
+		entityManager = new EntityManager(handler, player);
 	}
 
 	public Tile getTileAtPixel(int x, int y)
@@ -69,7 +75,7 @@ public class Level
 
 	public void update()
 	{
-
+		entityManager.update();
 	}
 
 	public void draw(Graphics g)
@@ -93,5 +99,7 @@ public class Level
 					(int)(y * Tile.HEIGHT - yOffset));
 			}
 		}
+		
+		entityManager.draw(g);
 	}
 }

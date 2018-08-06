@@ -20,25 +20,22 @@ public class GameState
 	{
 		super(handler);
 
-		level = new Level(handler);
+		player = new Player(handler, 32, 32, new Vector2D(64, 64), Creature.DOWN, input);
+		
+		level = new Level(handler, player);
 		handler.setLevel(level);
 
-		player = new Player(handler, 32, 32, new Vector2D(64, 64), Creature.DOWN, input);
 	}
 
 	@Override
 	public void update()
 	{
 		level.update();
-		player.update();
-
-		handler.getGameCamera().centerOnEntity(player);
 	}
 
 	@Override
 	public void draw(Graphics g)
 	{
 		level.draw(g);
-		player.draw(g);
 	}
 }
