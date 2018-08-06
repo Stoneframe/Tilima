@@ -18,7 +18,7 @@ public class Level
 
 	private EntityManager entityManager;
 
-	public Level(Handler handler, Player player)
+	public Level(Handler handler, Player... players)
 	{
 		this.handler = handler;
 
@@ -53,7 +53,12 @@ public class Level
 				}
 		};
 
-		entityManager = new EntityManager(handler, player);
+		entityManager = new EntityManager(handler, players);
+	}
+
+	public EntityManager getEntityManager()
+	{
+		return entityManager;
 	}
 
 	public Tile getTileAtPixel(int x, int y)
@@ -99,7 +104,7 @@ public class Level
 					(int)(y * Tile.HEIGHT - yOffset));
 			}
 		}
-		
+
 		entityManager.draw(g);
 	}
 }

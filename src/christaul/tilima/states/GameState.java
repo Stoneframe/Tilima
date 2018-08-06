@@ -14,17 +14,23 @@ public class GameState
 {
 	private Level level;
 
-	private Player player;
-
 	public GameState(Handler handler, PlayerInput input)
 	{
 		super(handler);
 
-		player = new Player(handler, 32, 32, new Vector2D(64, 64), Creature.DOWN, input);
-		
-		level = new Level(handler, player);
-		handler.setLevel(level);
+		PlayerInput emptyInput = new PlayerInput()
+		{
+			public void update()
+			{
+			}
+		};
 
+		level = new Level(
+				handler,
+				new Player(handler, 32, 32, new Vector2D(64, 64), Creature.DOWN, input),
+				new Player(handler, 32, 32, new Vector2D(96, 64), Creature.DOWN, emptyInput));
+
+		handler.setLevel(level);
 	}
 
 	@Override

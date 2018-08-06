@@ -29,7 +29,7 @@ public abstract class Creature
 	@Override
 	public void update()
 	{
-		if (collisionWithTileAt(targetPosition))
+		if (collisionAt(targetPosition))
 		{
 			targetPosition = currentPosition;
 		}
@@ -46,12 +46,32 @@ public abstract class Creature
 		updateAnimation();
 	}
 
+	protected boolean collisionAt(Vector2D position)
+	{
+		return collisionWithTileAt(position) || collisionWithEntityAt(position);
+	}
+
 	protected boolean collisionWithTileAt(Vector2D position)
 	{
 		return handler
 			.getLevel()
 			.getTileAtPixel((int)position.getX(), (int)position.getY())
 			.isSolid();
+	}
+
+	protected boolean collisionWithEntityAt(Vector2D position)
+	{
+		for (Entity entity : handler.getLevel().getEntityManager().getEntities())
+		{
+			if (entity.equals(this)) continue;
+
+			if (position.equals(entity.getPosition()))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	protected boolean isMoving()

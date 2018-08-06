@@ -13,12 +13,17 @@ public class EntityManager
 	private Player player;
 	private List<Entity> entities;
 
-	public EntityManager(Handler handler, Player player)
+	public EntityManager(Handler handler, Player... players)
 	{
 		this.handler = handler;
-		this.player = player;
+		this.player = players[0];
 
 		entities = new ArrayList<>();
+
+		for (Player player : players)
+		{
+			entities.add(player);
+		}
 	}
 
 	public Handler getHandler()
@@ -60,8 +65,6 @@ public class EntityManager
 			entity.update();
 		}
 
-		player.update();
-
 		handler.getGameCamera().centerOnEntity(player);
 	}
 
@@ -71,7 +74,5 @@ public class EntityManager
 		{
 			entity.draw(g);
 		}
-
-		player.draw(g);
 	}
 }
