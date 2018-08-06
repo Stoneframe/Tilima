@@ -53,10 +53,7 @@ public abstract class Creature
 
 	protected boolean collisionWithTileAt(Vector2D position)
 	{
-		return handler
-			.getLevel()
-			.getTileAtPixel((int)position.getX(), (int)position.getY())
-			.isSolid();
+		return handler.getLevel().getTileAt(position).isSolid();
 	}
 
 	protected boolean collisionWithEntityAt(Vector2D position)

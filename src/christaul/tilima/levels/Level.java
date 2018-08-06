@@ -6,6 +6,7 @@ import christaul.tilima.Handler;
 import christaul.tilima.entities.EntityManager;
 import christaul.tilima.entities.Player;
 import christaul.tilima.tiles.Tile;
+import christaul.tilima.util.Vector2D;
 
 public class Level
 {
@@ -59,6 +60,11 @@ public class Level
 	public EntityManager getEntityManager()
 	{
 		return entityManager;
+	}
+
+	public Tile getTileAt(Vector2D position)
+	{
+		return getTile((int)(position.getX() / Tile.WIDTH), (int)(position.getY() / Tile.HEIGHT));
 	}
 
 	public Tile getTileAtPixel(int x, int y)

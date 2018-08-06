@@ -12,6 +12,11 @@ public class Rectangle2D
 		rectangle = new Rectangle(x, y, width, height);
 	}
 
+	public Rectangle2D(Vector2D position, int width, int height)
+	{
+		this((int)position.getX(), (int)position.getY(), width, height);
+	}
+
 	public boolean intersects(Rectangle2D rectangle)
 	{
 		return this.rectangle.intersects(rectangle.rectangle);

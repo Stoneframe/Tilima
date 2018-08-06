@@ -25,11 +25,6 @@ public abstract class Entity
 		this.currentPosition = position;
 	}
 
-	public Vector2D getPosition()
-	{
-		return currentPosition;
-	}
-
 	public int getWidth()
 	{
 		return width;
@@ -40,13 +35,14 @@ public abstract class Entity
 		return height;
 	}
 
+	public Vector2D getPosition()
+	{
+		return currentPosition;
+	}
+
 	public Rectangle2D getBounds()
 	{
-		return new Rectangle2D(
-				(int)currentPosition.getX(),
-				(int)currentPosition.getY(),
-				width,
-				height);
+		return new Rectangle2D(currentPosition, width, height);
 	}
 
 	public abstract void update();
