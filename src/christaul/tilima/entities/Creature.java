@@ -37,25 +37,20 @@ public abstract class Creature
 	@Override
 	public void draw(Graphics g)
 	{
-		phase.draw(g);
+		g.drawImage(
+			phase.getCurrentAnimation().getCurrentFrame(),
+			(int)(currentPosition.getX() - handler.getGameCamera().getXOffset()),
+			(int)(currentPosition.getY() - handler.getGameCamera().getYOffset()),
+			Tile.WIDTH,
+			Tile.HEIGHT,
+			null);
 	}
 
 	private abstract class Phase
 	{
 		public abstract void update();
 
-		public void draw(Graphics g)
-		{
-			g.drawImage(
-				getCurrentAnimation().getCurrentFrame(),
-				(int)(currentPosition.getX() - handler.getGameCamera().getXOffset()),
-				(int)(currentPosition.getY() - handler.getGameCamera().getYOffset()),
-				Tile.WIDTH,
-				Tile.HEIGHT,
-				null);
-		}
-
-		protected abstract Animation getCurrentAnimation();
+		public abstract Animation getCurrentAnimation();
 	}
 
 	protected abstract class MovementPhase
@@ -80,24 +75,15 @@ public abstract class Creature
 
 		public void update()
 		{
-			if (tilesMoved > 10) return;
+			if (tilesMoved >= 10) return;
 
-			if (collisionAt(targetPosition))
+			if (collision())
 			{
-				targetPosition = currentPosition;
+				cancelMovement();
 			}
-
-			if (isMoving())
+			else if (shouldMove())
 			{
-				move(direction, SPEED);
-
-				int nextTileX = (int)(currentPosition.getX() / Tile.WIDTH);
-				int nextTileY = (int)(currentPosition.getY() / Tile.HEIGHT);
-
-				if (nextTileX != tileX || nextTileY != tileY) tilesMoved++;
-
-				tileX = nextTileX;
-				tileY = nextTileY;
+				move();
 			}
 			else
 			{
@@ -107,23 +93,28 @@ public abstract class Creature
 			getCurrentAnimation().update();
 		}
 
-		protected boolean collisionAt(Vector2D position)
+		protected boolean collision()
 		{
-			return collisionWithTileAt(position) || collisionWithEntityAt(position);
+			return collisionWithTile() || collisionWithEntity();
 		}
 
-		protected boolean collisionWithTileAt(Vector2D position)
+		protected void cancelMovement()
 		{
-			return handler.getLevel().getTileAt(position).isSolid();
+			targetPosition = currentPosition;
 		}
 
-		protected boolean collisionWithEntityAt(Vector2D position)
+		protected boolean collisionWithTile()
+		{
+			return handler.getLevel().getTileAt(targetPosition).isSolid();
+		}
+
+		protected boolean collisionWithEntity()
 		{
 			for (Entity entity : handler.getLevel().getEntityManager().getEntities())
 			{
 				if (entity.equals(Creature.this)) continue;
 
-				if (entity.getBounds().overlaps(position))
+				if (entity.getBounds().overlaps(targetPosition))
 				{
 					return true;
 				}
@@ -132,16 +123,44 @@ public abstract class Creature
 			return false;
 		}
 
-		protected boolean isMoving()
+		protected boolean shouldMove()
 		{
 			return !currentPosition.equals(targetPosition);
 		}
 
-		protected void move(Vector2D direction, double speed)
+		protected void move()
 		{
-			currentPosition = currentPosition.add(direction.mul(speed));
+			currentPosition = currentPosition.add(direction.mul(SPEED));
+
+			int nextTileX = (int)(currentPosition.getX() / Tile.WIDTH);
+			int nextTileY = (int)(currentPosition.getY() / Tile.HEIGHT);
+
+			if (nextTileX != tileX || nextTileY != tileY) tilesMoved++;
+
+			tileX = nextTileX;
+			tileY = nextTileY;
 		}
 
 		protected abstract void updateInput();
+	}
+
+	protected abstract class TestPhase
+		extends Phase
+	{
+		private boolean endPhasePrinted = false;
+
+		@Override
+		public void update()
+		{
+			if (!endPhasePrinted)
+			{
+				System.out.println("");
+
+				endPhasePrinted = true;
+			}
+		}
+
+		@Override
+		public abstract Animation getCurrentAnimation();
 	}
 }

@@ -71,30 +71,30 @@ public class Player
 					break;
 			}
 
-			if (isMoving())
+			if (shouldMove())
 			{
 				direction = Vector2D.unit(currentPosition, targetPosition);
 			}
 		}
 
 		@Override
-		protected Animation getCurrentAnimation()
+		public Animation getCurrentAnimation()
 		{
 			if (direction.equals(UP))
 			{
-				return isMoving() ? animationMovingUp : animationIdleUp;
+				return shouldMove() ? animationMovingUp : animationIdleUp;
 			}
 			else if (direction.equals(DOWN))
 			{
-				return isMoving() ? animationMovingDown : animationIdleDown;
+				return shouldMove() ? animationMovingDown : animationIdleDown;
 			}
 			else if (direction.equals(LEFT))
 			{
-				return isMoving() ? animationMovingLeft : animationIdleLeft;
+				return shouldMove() ? animationMovingLeft : animationIdleLeft;
 			}
 			else if (direction.equals(RIGHT))
 			{
-				return isMoving() ? animationMovingRight : animationIdleRight;
+				return shouldMove() ? animationMovingRight : animationIdleRight;
 			}
 			else
 			{
