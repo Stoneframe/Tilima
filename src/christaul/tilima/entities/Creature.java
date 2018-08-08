@@ -21,7 +21,12 @@ public abstract class Creature
 
 	protected Phase phase;
 
-	public Creature(Handler handler, int width, int height, Vector2D position, Vector2D direction)
+	protected Creature(
+			Handler handler,
+			int width,
+			int height,
+			Vector2D position,
+			Vector2D direction)
 	{
 		super(handler, width, height, position);
 
@@ -38,7 +43,7 @@ public abstract class Creature
 	public void draw(Graphics g)
 	{
 		g.drawImage(
-			phase.getCurrentAnimation().getCurrentFrame(),
+			animation.getCurrentFrame(),
 			(int)(currentPosition.getX() - handler.getGameCamera().getXOffset()),
 			(int)(currentPosition.getY() - handler.getGameCamera().getYOffset()),
 			Tile.WIDTH,
@@ -46,11 +51,19 @@ public abstract class Creature
 			null);
 	}
 
-	private abstract class Phase
+	protected abstract class Phase
 	{
-		public abstract void update();
+		public void update()
+		{
+			updateInternal();
 
-		public abstract Animation getCurrentAnimation();
+			animation = getCurrentAnimation();
+			animation.update();
+		}
+
+		protected abstract void updateInternal();
+
+		protected abstract Animation getCurrentAnimation();
 	}
 
 	protected abstract class MovementPhase
@@ -73,7 +86,8 @@ public abstract class Creature
 			tilesMoved = 0;
 		}
 
-		public void update()
+		@Override
+		protected void updateInternal()
 		{
 			if (tilesMoved >= 10) return;
 
@@ -89,26 +103,31 @@ public abstract class Creature
 			{
 				updateInput();
 			}
-
-			getCurrentAnimation().update();
 		}
 
-		protected boolean collision()
+		protected abstract void updateInput();
+
+		protected boolean shouldMove()
+		{
+			return !currentPosition.equals(targetPosition);
+		}
+
+		private boolean collision()
 		{
 			return collisionWithTile() || collisionWithEntity();
 		}
 
-		protected void cancelMovement()
+		private void cancelMovement()
 		{
 			targetPosition = currentPosition;
 		}
 
-		protected boolean collisionWithTile()
+		private boolean collisionWithTile()
 		{
 			return handler.getLevel().getTileAt(targetPosition).isSolid();
 		}
 
-		protected boolean collisionWithEntity()
+		private boolean collisionWithEntity()
 		{
 			for (Entity entity : handler.getLevel().getEntityManager().getEntities())
 			{
@@ -123,12 +142,7 @@ public abstract class Creature
 			return false;
 		}
 
-		protected boolean shouldMove()
-		{
-			return !currentPosition.equals(targetPosition);
-		}
-
-		protected void move()
+		private void move()
 		{
 			currentPosition = currentPosition.add(direction.mul(SPEED));
 
@@ -140,8 +154,6 @@ public abstract class Creature
 			tileX = nextTileX;
 			tileY = nextTileY;
 		}
-
-		protected abstract void updateInput();
 	}
 
 	protected abstract class TestPhase

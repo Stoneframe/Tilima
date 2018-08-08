@@ -78,7 +78,7 @@ public class Player
 		}
 
 		@Override
-		public Animation getCurrentAnimation()
+		protected Animation getCurrentAnimation()
 		{
 			if (direction.equals(UP))
 			{
