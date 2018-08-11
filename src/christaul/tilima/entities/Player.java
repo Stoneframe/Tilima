@@ -43,63 +43,57 @@ public class Player
 		animationMovingDown = new Animation(Assets.player_moving_down, 62);
 		animationMovingLeft = new Animation(Assets.player_moving_left, 62);
 		animationMovingRight = new Animation(Assets.player_moving_right, 62);
-
-		phase = new PlayerMovementPhase();
 	}
 
-	private class PlayerMovementPhase
-		extends MovementPhase
+	@Override
+	protected void updateInput()
 	{
-		@Override
-		protected void updateInput()
+		input.update();
+
+		switch (input.getMovement())
 		{
-			input.update();
-
-			switch (input.getMovement())
-			{
-				case PlayerInput.UP:
-					targetPosition = currentPosition.add(UP.mul(Tile.HEIGHT));
-					break;
-				case PlayerInput.DOWN:
-					targetPosition = currentPosition.add(DOWN.mul(Tile.HEIGHT));
-					break;
-				case PlayerInput.LEFT:
-					targetPosition = currentPosition.add(LEFT.mul(Tile.WIDTH));
-					break;
-				case PlayerInput.RIGHT:
-					targetPosition = currentPosition.add(RIGHT.mul(Tile.WIDTH));
-					break;
-			}
-
-			if (shouldMove())
-			{
-				direction = Vector2D.unit(currentPosition, targetPosition);
-			}
+			case PlayerInput.UP:
+				targetPosition = currentPosition.add(UP.mul(Tile.HEIGHT));
+				break;
+			case PlayerInput.DOWN:
+				targetPosition = currentPosition.add(DOWN.mul(Tile.HEIGHT));
+				break;
+			case PlayerInput.LEFT:
+				targetPosition = currentPosition.add(LEFT.mul(Tile.WIDTH));
+				break;
+			case PlayerInput.RIGHT:
+				targetPosition = currentPosition.add(RIGHT.mul(Tile.WIDTH));
+				break;
 		}
 
-		@Override
-		protected Animation getCurrentAnimation()
+		if (shouldMove())
 		{
-			if (direction.equals(UP))
-			{
-				return shouldMove() ? animationMovingUp : animationIdleUp;
-			}
-			else if (direction.equals(DOWN))
-			{
-				return shouldMove() ? animationMovingDown : animationIdleDown;
-			}
-			else if (direction.equals(LEFT))
-			{
-				return shouldMove() ? animationMovingLeft : animationIdleLeft;
-			}
-			else if (direction.equals(RIGHT))
-			{
-				return shouldMove() ? animationMovingRight : animationIdleRight;
-			}
-			else
-			{
-				return animationIdleDown;
-			}
+			direction = Vector2D.unit(currentPosition, targetPosition);
+		}
+	}
+
+	@Override
+	protected Animation getCurrentAnimation()
+	{
+		if (direction.equals(UP))
+		{
+			return shouldMove() ? animationMovingUp : animationIdleUp;
+		}
+		else if (direction.equals(DOWN))
+		{
+			return shouldMove() ? animationMovingDown : animationIdleDown;
+		}
+		else if (direction.equals(LEFT))
+		{
+			return shouldMove() ? animationMovingLeft : animationIdleLeft;
+		}
+		else if (direction.equals(RIGHT))
+		{
+			return shouldMove() ? animationMovingRight : animationIdleRight;
+		}
+		else
+		{
+			return animationIdleDown;
 		}
 	}
 }
