@@ -4,6 +4,8 @@ import christaul.tilima.Handler;
 import christaul.tilima.gfx.Animation;
 import christaul.tilima.gfx.Assets;
 import christaul.tilima.inputs.PlayerInput;
+import christaul.tilima.paths.Path;
+import christaul.tilima.paths.PathFinder;
 import christaul.tilima.tiles.Tile;
 import christaul.tilima.util.Vector2D;
 
@@ -70,6 +72,16 @@ public class Player
 		{
 			direction = Vector2D.unit(currentPosition, targetPosition);
 		}
+
+		Vector2D destination = new Vector2D(
+				input.getMouseX() + handler.getGameCamera().getXOffset(),
+				input.getMouseY() + handler.getGameCamera().getYOffset());
+
+		PathFinder pathFinder = new PathFinder(handler.getLevel());
+
+		Path path = pathFinder.findPath(currentPosition, destination);
+
+		System.out.println(path);
 	}
 
 	@Override

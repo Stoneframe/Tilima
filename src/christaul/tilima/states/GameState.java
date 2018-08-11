@@ -20,8 +20,9 @@ public class GameState
 
 		level = new Level(
 				handler,
-				new Player(handler, 32, 32, new Vector2D(64, 64), Creature.DOWN, inputs[0]),
-				new Player(handler, 32, 32, new Vector2D(96, 64), Creature.DOWN, inputs[1]));
+				new Player(handler, 32, 32, new Vector2D(64, 64), Creature.DOWN, inputs[0]));
+//		,
+//				new Player(handler, 32, 32, new Vector2D(96, 64), Creature.DOWN, inputs[1]));
 
 		handler.setLevel(level);
 	}

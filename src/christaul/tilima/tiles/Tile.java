@@ -9,8 +9,9 @@ public class Tile
 	public static final int HEIGHT = 32;
 
 	public static Tile[] tiles = new Tile[256];
-	public static Tile grassTile = new GrassTile(0);
-	public static Tile stoneTile = new StoneTile(1);
+	public static Tile emptyTile = new EmptyTile(0);
+	public static Tile grassTile = new GrassTile(1);
+	public static Tile stoneTile = new StoneTile(2);
 
 	protected BufferedImage texture;
 

@@ -14,6 +14,10 @@ public abstract class PlayerInput
 	{
 		return movement;
 	}
+	
+	public abstract int getMouseX();
+	
+	public abstract int getMouseY();
 
 	public abstract void update();
 }
