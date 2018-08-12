@@ -4,6 +4,8 @@ import java.awt.Graphics;
 
 import christaul.tilima.Handler;
 import christaul.tilima.gfx.Animation;
+import christaul.tilima.paths.Path;
+import christaul.tilima.paths.PathNode;
 import christaul.tilima.tiles.Tile;
 import christaul.tilima.util.Vector2D;
 
@@ -21,10 +23,7 @@ public abstract class Creature
 
 	protected Vector2D direction;
 
-	private int tileX;
-	private int tileY;
-
-	private int tilesMoved;
+	protected Path path;
 
 	protected Creature(
 			Handler handler,
@@ -42,8 +41,6 @@ public abstract class Creature
 	@Override
 	public void update()
 	{
-		if (tilesMoved >= 10) return;
-
 		if (collision())
 		{
 			cancelMovement();
@@ -75,7 +72,7 @@ public abstract class Creature
 
 	protected boolean shouldMove()
 	{
-		return !currentPosition.equals(targetPosition);
+		return path != null && !path.isEmpty();
 	}
 
 	private boolean collision()
@@ -110,15 +107,24 @@ public abstract class Creature
 
 	private void move()
 	{
-		currentPosition = currentPosition.add(direction.mul(SPEED));
+		PathNode pathNode = path.firstPathNode();
 
-		int nextTileX = (int)(currentPosition.getX() / Tile.WIDTH);
-		int nextTileY = (int)(currentPosition.getY() / Tile.HEIGHT);
+		targetPosition = new Vector2D(pathNode.getX() * Tile.WIDTH, pathNode.getY() * Tile.HEIGHT);
 
-		if (nextTileX != tileX || nextTileY != tileY) tilesMoved++;
+		if (currentPosition.equals(targetPosition))
+		{
+			path.remove(pathNode);
 
-		tileX = nextTileX;
-		tileY = nextTileY;
+			if (path.isEmpty())
+			{
+				path = null;
+			}
+		}
+		else
+		{
+			direction = Vector2D.unit(currentPosition, targetPosition);
+			currentPosition = currentPosition.add(direction.mul(SPEED));
+		}
 	}
 
 	protected abstract void updateInput();

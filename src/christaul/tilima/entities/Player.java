@@ -4,9 +4,7 @@ import christaul.tilima.Handler;
 import christaul.tilima.gfx.Animation;
 import christaul.tilima.gfx.Assets;
 import christaul.tilima.inputs.PlayerInput;
-import christaul.tilima.paths.Path;
 import christaul.tilima.paths.PathFinder;
-import christaul.tilima.tiles.Tile;
 import christaul.tilima.util.Vector2D;
 
 public class Player
@@ -52,36 +50,19 @@ public class Player
 	{
 		input.update();
 
-		switch (input.getMovement())
+		int mouseX = input.getMouseX();
+		int mouseY = input.getMouseY();
+
+		if (mouseX != -1 && mouseY != -1)
 		{
-			case PlayerInput.UP:
-				targetPosition = currentPosition.add(UP.mul(Tile.HEIGHT));
-				break;
-			case PlayerInput.DOWN:
-				targetPosition = currentPosition.add(DOWN.mul(Tile.HEIGHT));
-				break;
-			case PlayerInput.LEFT:
-				targetPosition = currentPosition.add(LEFT.mul(Tile.WIDTH));
-				break;
-			case PlayerInput.RIGHT:
-				targetPosition = currentPosition.add(RIGHT.mul(Tile.WIDTH));
-				break;
+			Vector2D destination = new Vector2D(
+					mouseX + handler.getGameCamera().getXOffset(),
+					mouseY + handler.getGameCamera().getYOffset());
+
+			PathFinder pathFinder = new PathFinder(handler.getLevel());
+
+			path = pathFinder.findPath(currentPosition, destination);
 		}
-
-		if (shouldMove())
-		{
-			direction = Vector2D.unit(currentPosition, targetPosition);
-		}
-
-		Vector2D destination = new Vector2D(
-				input.getMouseX() + handler.getGameCamera().getXOffset(),
-				input.getMouseY() + handler.getGameCamera().getYOffset());
-
-		PathFinder pathFinder = new PathFinder(handler.getLevel());
-
-		Path path = pathFinder.findPath(currentPosition, destination);
-
-		System.out.println(path);
 	}
 
 	@Override
